@@ -9,8 +9,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # Path and Instances 
   get_it: ^7.7.0
   go_router: ^14.2.0
+
+  # Assets and Themes
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.0.10+1
+
+  # Miscellaneous
+  path_provider: ^2.1.3
 
 dev_dependencies:
   flutter_test:
@@ -19,3 +28,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/

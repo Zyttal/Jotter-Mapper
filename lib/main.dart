@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jotter_mapper/routing/router.dart';
+import 'package:jotter_mapper/themes/theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routerConfig: GlobalRouter.I.router,
       title: 'Jotter Mapper',
+      theme: AppTheme.appTheme,
     );
   }
 }

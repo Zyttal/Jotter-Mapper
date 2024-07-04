@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jotter_mapper/controllers/shared_preferences.dart';
+import 'package:jotter_mapper/enum/first_instance_enum.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/auth/login_screen.dart';
 import 'package:jotter_mapper/screens/widgets/custom_button.dart';
@@ -143,6 +145,9 @@ class _OnBoardingState extends State<OnBoarding> {
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut);
                 } else {
+                  SharedPreferencesController.I
+                      .setState(FirstInstanceEnum.notFirstInstance);
+                  SharedPreferencesController.I.saveRunState();
                   GlobalRouter.I.router.go(LoginScreen.route);
                 }
               },

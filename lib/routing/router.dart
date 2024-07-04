@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +20,8 @@ class GlobalRouter {
   late GlobalKey<NavigatorState> _rootNavigatorKey;
   late GlobalKey<NavigatorState> _shellNavigatorKey;
 
+  FutureOr<String?> handleRedirect(BuildContext context, GoRouterState) async {}
+
   GlobalRouter() {
     _rootNavigatorKey = GlobalKey<NavigatorState>();
     _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -25,6 +29,7 @@ class GlobalRouter {
     router = GoRouter(
         navigatorKey: _rootNavigatorKey,
         initialLocation: LandingScreen.route,
+        // redirect: handlw,
         routes: [
           GoRoute(
               parentNavigatorKey: _rootNavigatorKey,

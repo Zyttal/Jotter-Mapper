@@ -1,0 +1,1 @@
+enum FirstInstanceEnum { isFirstInstance, notFirstInstance }

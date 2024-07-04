@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:jotter_mapper/routing/router.dart';
-import 'package:jotter_mapper/screens/auth/login_screen.dart';
 import 'package:jotter_mapper/screens/widgets/back_button.dart';
 import 'package:jotter_mapper/screens/widgets/custom_button.dart';
 import 'package:jotter_mapper/screens/widgets/text_field_with_label.dart';
@@ -49,7 +47,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         leadingWidth: 80,
         leading: CustomBackButton(
           func: () {
-            GlobalRouter.I.router.go(LoginScreen.route);
+            Navigator.pop(context);
           },
         ),
         title: Text(

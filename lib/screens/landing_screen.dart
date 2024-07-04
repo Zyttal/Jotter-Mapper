@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jotter_mapper/routing/router.dart';
+import 'package:jotter_mapper/screens/on_boarding.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -16,7 +18,9 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 4), () {});
+    Future.delayed(const Duration(seconds: 4), () {
+      GlobalRouter.I.router.go(OnBoarding.route);
+    });
   }
 
   @override

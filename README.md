@@ -1,7 +1,6 @@
 # Jotter Mapper
 
 An application where users can log their experiences and memories at different locations. The app uses Mapbox to pin journal entries on a map, providing a visual diary of the user's experiences.
-<hr>
 
 ## Features
 

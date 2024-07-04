@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jotter_mapper/screens/widgets/custom_button.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -18,9 +19,9 @@ class _OnBoardingState extends State<OnBoarding> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       Container(
-          margin: EdgeInsets.only(left: 20, right: 20),
+          margin: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -29,14 +30,14 @@ class _OnBoardingState extends State<OnBoarding> {
                 "assets/images/ob_graphic1.svg",
                 height: 200,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Text(
                 "Create Your Journal Entries",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Text(
@@ -47,7 +48,7 @@ class _OnBoardingState extends State<OnBoarding> {
             ],
           )),
       Container(
-          margin: EdgeInsets.only(left: 20, right: 20),
+          margin: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -56,14 +57,14 @@ class _OnBoardingState extends State<OnBoarding> {
                 "assets/images/ob_graphic2.svg",
                 height: 200,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Text(
                 "Create Your Journal Entries",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Text(
@@ -74,7 +75,7 @@ class _OnBoardingState extends State<OnBoarding> {
             ],
           )),
       Container(
-          margin: EdgeInsets.only(left: 20, right: 20),
+          margin: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -83,14 +84,14 @@ class _OnBoardingState extends State<OnBoarding> {
                 "assets/images/ob_graphic3.svg",
                 height: 200,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Text(
                 "Enrich Your Entries with Images",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Text(
@@ -114,51 +115,33 @@ class _OnBoardingState extends State<OnBoarding> {
                 _currentPageNotifier.value = page;
               });
             },
-            children: _pages,
+            children: pages,
           )),
           SmoothPageIndicator(
             controller: _pageController,
-            count: _pages.length,
+            count: pages.length,
             effect: const SlideEffect(
                 dotHeight: 10,
                 dotWidth: 10,
                 spacing: 20,
                 activeDotColor: ColorPalette.primary100,
-                dotColor: ColorPalette.dark200),
+                dotColor: ColorPalette.mixed600),
           ),
           const SizedBox(
             height: 20,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, bottom: 30),
-            child: InkWell(
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              onTap: () {
+            padding: const EdgeInsets.all(20.0),
+            child: CustomButton(
+              text: "Continue",
+              func: () {
                 if (_currentPageNotifier.value != 2) {
                   _currentPageNotifier.value += 1;
                   _pageController.nextPage(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut);
-                } else {
-                  // Redirect to Login Screen
-                }
+                } else {}
               },
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                    color: ColorPalette.primary100,
-                    borderRadius: BorderRadius.circular(50)),
-                child: Center(
-                  child: Text(
-                    "Continue",
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall!
-                        .copyWith(fontSize: 16),
-                  ),
-                ),
-              ),
             ),
           )
         ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jotter_mapper/screens/auth/login_screen.dart';
 import 'package:jotter_mapper/screens/landing_screen.dart';
 import 'package:jotter_mapper/screens/on_boarding.dart';
 
@@ -37,7 +38,14 @@ class GlobalRouter {
               name: OnBoarding.name,
               builder: (context, _) {
                 return OnBoarding();
-              })
+              }),
+          GoRoute(
+              parentNavigatorKey: _rootNavigatorKey,
+              path: LoginScreen.route,
+              name: LoginScreen.name,
+              builder: (context, _) {
+                return LoginScreen();
+              }),
         ]);
   }
 }

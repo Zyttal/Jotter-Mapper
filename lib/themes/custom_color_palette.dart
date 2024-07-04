@@ -24,4 +24,7 @@ class ColorPalette {
   static const Color mixed400 = Color(0xFF5E5A66);
   static const Color mixed500 = Color(0xFF76737E);
   static const Color mixed600 = Color(0xFF76737E);
+
+  // For Specific White
+  static const Color washedWhite = Color(0xFFD8D8D8);
 }

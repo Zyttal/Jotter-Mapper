@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jotter_mapper/routing/router.dart';
+import 'package:jotter_mapper/screens/auth/login_screen.dart';
 import 'package:jotter_mapper/screens/widgets/custom_button.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -140,7 +142,9 @@ class _OnBoardingState extends State<OnBoarding> {
                   _pageController.nextPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut);
-                } else {}
+                } else {
+                  GlobalRouter.I.router.go(LoginScreen.route);
+                }
               },
             ),
           )

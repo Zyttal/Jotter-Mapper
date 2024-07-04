@@ -13,6 +13,7 @@ class AppTheme {
       appBarTheme: const AppBarTheme(backgroundColor: ColorPalette.dark100),
       inputDecorationTheme: InputDecorationTheme(
           focusColor: ColorPalette.primary100,
-          prefixIconColor: ColorPalette.dark400),
+          prefixIconColor: ColorPalette.dark400,
+          fillColor: ColorPalette.dark300),
       brightness: Brightness.dark);
 }

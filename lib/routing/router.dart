@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jotter_mapper/screens/auth/login_screen.dart';
+import 'package:jotter_mapper/screens/auth/registration_screen.dart';
 import 'package:jotter_mapper/screens/landing_screen.dart';
 import 'package:jotter_mapper/screens/on_boarding.dart';
 
@@ -46,6 +47,13 @@ class GlobalRouter {
               builder: (context, _) {
                 return LoginScreen();
               }),
+          GoRoute(
+              parentNavigatorKey: _rootNavigatorKey,
+              path: RegistrationScreen.route,
+              name: RegistrationScreen.name,
+              builder: (context, _) {
+                return RegistrationScreen();
+              })
         ]);
   }
 }

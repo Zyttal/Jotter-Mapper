@@ -42,8 +42,9 @@ class _TextFieldWithLabelState extends State<TextFieldWithLabel> {
           keyboardAppearance: Brightness.dark,
           keyboardType:
               !widget.isPassword ? null : TextInputType.visiblePassword,
-          obscureText: obfuscate,
+          obscureText: widget.isPassword && obfuscate,
           decoration: InputDecoration(
+              fillColor: ColorPalette.dark300,
               prefixIcon: widget.icon,
               suffixIcon: !widget.isPassword
                   ? null

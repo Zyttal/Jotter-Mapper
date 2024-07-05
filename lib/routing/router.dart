@@ -5,6 +5,11 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jotter_mapper/screens/auth/login_screen.dart';
 import 'package:jotter_mapper/screens/auth/registration_screen.dart';
+import 'package:jotter_mapper/screens/content/entries_screen.dart';
+import 'package:jotter_mapper/screens/content/home_screen.dart';
+import 'package:jotter_mapper/screens/content/map_screen.dart';
+import 'package:jotter_mapper/screens/content/profile_screen.dart';
+import 'package:jotter_mapper/screens/content/wrapper.dart';
 import 'package:jotter_mapper/screens/landing_screen.dart';
 import 'package:jotter_mapper/screens/on_boarding.dart';
 
@@ -20,7 +25,8 @@ class GlobalRouter {
   late GlobalKey<NavigatorState> _rootNavigatorKey;
   late GlobalKey<NavigatorState> _shellNavigatorKey;
 
-  FutureOr<String?> handleRedirect(BuildContext context, GoRouterState) async {}
+  FutureOr<String?> handleRedirect(
+      BuildContext context, GoRouterState state) async {}
 
   GlobalRouter() {
     _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -29,21 +35,21 @@ class GlobalRouter {
     router = GoRouter(
         navigatorKey: _rootNavigatorKey,
         initialLocation: LandingScreen.route,
-        // redirect: handlw,
+        redirect: handleRedirect,
         routes: [
           GoRoute(
               parentNavigatorKey: _rootNavigatorKey,
               path: LandingScreen.route,
               name: LandingScreen.name,
               builder: (context, _) {
-                return LandingScreen();
+                return const LandingScreen();
               }),
           GoRoute(
               parentNavigatorKey: _rootNavigatorKey,
               path: OnBoarding.route,
               name: OnBoarding.name,
               builder: (context, _) {
-                return OnBoarding();
+                return const OnBoarding();
               }),
           GoRoute(
               parentNavigatorKey: _rootNavigatorKey,
@@ -58,7 +64,45 @@ class GlobalRouter {
               name: RegistrationScreen.name,
               builder: (context, _) {
                 return RegistrationScreen();
-              })
+              }),
+          ShellRoute(
+            navigatorKey: _shellNavigatorKey,
+            routes: [
+              GoRoute(
+                  parentNavigatorKey: _shellNavigatorKey,
+                  path: HomeScreen.route,
+                  name: HomeScreen.name,
+                  builder: (context, _) {
+                    return const HomeScreen();
+                  }),
+              GoRoute(
+                  parentNavigatorKey: _shellNavigatorKey,
+                  path: MapScreen.route,
+                  name: MapScreen.name,
+                  builder: (context, _) {
+                    return const MapScreen();
+                  }),
+              GoRoute(
+                  parentNavigatorKey: _shellNavigatorKey,
+                  path: EntriesScreen.route,
+                  name: EntriesScreen.name,
+                  builder: (context, _) {
+                    return const EntriesScreen();
+                  }),
+              GoRoute(
+                  parentNavigatorKey: _shellNavigatorKey,
+                  path: ProfileScreen.route,
+                  name: ProfileScreen.name,
+                  builder: (context, _) {
+                    return const ProfileScreen();
+                  }),
+            ],
+            builder: (context, state, child) {
+              return AppWrapper(
+                child: child,
+              );
+            },
+          )
         ]);
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:jotter_mapper/screens/widgets/back_button.dart';
-import 'package:jotter_mapper/screens/widgets/custom_button.dart';
-import 'package:jotter_mapper/screens/widgets/text_field_with_label.dart';
+import 'package:jotter_mapper/widgets/back_button.dart';
+import 'package:jotter_mapper/widgets/custom_button.dart';
+import 'package:jotter_mapper/widgets/text_field_with_label.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -197,7 +197,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               const SizedBox(
                 height: 30,
               ),
-              CustomButton(func: () {}, text: "Log in"),
+              CustomButton(func: () {}, text: "Create Account"),
               const SizedBox(
                 height: 30,
               ),

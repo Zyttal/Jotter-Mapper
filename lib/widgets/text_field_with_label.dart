@@ -74,6 +74,12 @@ class _TextFieldWithLabelState extends State<TextFieldWithLabel> {
                 borderSide:
                     BorderSide(color: ColorPalette.primary100, width: 2),
               ),
+              errorBorder: InputBorder.none,
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide:
+                    BorderSide(color: ColorPalette.primary100, width: 2),
+              ),
               contentPadding: EdgeInsets.all(20),
               hoverColor: ColorPalette.primary100,
               focusColor: ColorPalette.primary100),

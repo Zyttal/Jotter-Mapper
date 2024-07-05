@@ -3,8 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/auth/registration_screen.dart';
-import 'package:jotter_mapper/screens/widgets/custom_button.dart';
-import 'package:jotter_mapper/screens/widgets/text_field_with_label.dart';
+import 'package:jotter_mapper/screens/content/home_screen.dart';
+import 'package:jotter_mapper/widgets/custom_button.dart';
+import 'package:jotter_mapper/widgets/text_field_with_label.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -160,7 +161,13 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 30,
               ),
-              CustomButton(func: () {}, text: "Log in"),
+              CustomButton(
+                  func: () {
+                    // if (formKey.currentState!.validate()) {
+                    GlobalRouter.I.router.go(HomeScreen.route);
+                    // }
+                  },
+                  text: "Log in"),
               const SizedBox(
                 height: 30,
               ),

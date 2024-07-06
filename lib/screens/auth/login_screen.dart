@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:jotter_mapper/controllers/auth_controller.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/auth/registration_screen.dart';
 import 'package:jotter_mapper/screens/content/home_screen.dart';
@@ -104,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         borderRadius: BorderRadius.circular(15)),
                     child: SvgPicture.asset(
-                      "assets/icons/github_logo.svg",
+                      "assets/icons/facebook_logo.svg",
                       width: 30,
                     ),
                   )
@@ -162,10 +163,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 30,
               ),
               CustomButton(
-                  func: () {
-                    // if (formKey.currentState!.validate()) {
-                    GlobalRouter.I.router.go(HomeScreen.route);
-                    // }
+                  func: () async {
+                    if (formKey.currentState!.validate()) {
+                      AuthController.I
+                          .login(email.text.trim(), password.text.trim());
+                    }
                   },
                   text: "Log in"),
               const SizedBox(

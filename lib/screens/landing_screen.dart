@@ -22,7 +22,9 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     super.initState();
 
-    // AuthController.I.
+    // Uncomment When Presenting
+    // SharedPreferencesController.I.resetSharedPreferences();
+
     SharedPreferencesController.I.loadRunState().then((_) {
       String initialRoute = SharedPreferencesController.instance.runState ==
               FirstInstanceEnum.isFirstInstance

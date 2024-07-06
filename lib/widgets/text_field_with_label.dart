@@ -39,6 +39,7 @@ class _TextFieldWithLabelState extends State<TextFieldWithLabel> {
           height: 10,
         ),
         TextFormField(
+          controller: widget.controller,
           keyboardAppearance: Brightness.dark,
           keyboardType:
               !widget.isPassword ? null : TextInputType.visiblePassword,

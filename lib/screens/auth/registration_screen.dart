@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:jotter_mapper/controllers/auth_controller.dart';
 import 'package:jotter_mapper/widgets/back_button.dart';
 import 'package:jotter_mapper/widgets/custom_button.dart';
 import 'package:jotter_mapper/widgets/text_field_with_label.dart';
@@ -101,7 +102,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                         borderRadius: BorderRadius.circular(15)),
                     child: SvgPicture.asset(
-                      "assets/icons/github_logo.svg",
+                      "assets/icons/facebook_logo.svg",
                       width: 30,
                     ),
                   )
@@ -171,33 +172,38 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    TextFieldWithLabel(
-                      label: "Confirm Password",
-                      icon: Icon(Icons.lock_outline_rounded),
-                      controller: password,
-                      fn: passwordFn,
-                      isPassword: true,
-                      validator: MultiValidator([
-                        RequiredValidator(errorText: "Password is required"),
-                        MinLengthValidator(12,
-                            errorText:
-                                "Password must be at least 12 characters long"),
-                        MaxLengthValidator(128,
-                            errorText: "Password cannot exceed 128 characters"),
-                        PatternValidator(
-                          r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
-                          errorText:
-                              'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.',
-                        ),
-                      ]).call,
-                    ),
+                    // TextFieldWithLabel(
+                    //   label: "Confirm Password",
+                    //   icon: Icon(Icons.lock_outline_rounded),
+                    //   controller: password,
+                    //   fn: passwordFn,
+                    //   isPassword: true,
+                    //   validator: MultiValidator([
+                    //     RequiredValidator(errorText: "Password is required"),
+                    //     MinLengthValidator(12,
+                    //         errorText:
+                    //             "Password must be at least 12 characters long"),
+                    //     MaxLengthValidator(128,
+                    //         errorText: "Password cannot exceed 128 characters"),
+                    //     PatternValidator(
+                    //       r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
+                    //       errorText:
+                    //           'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.',
+                    //     ),
+                    //   ]).call,
+                    // ),
                   ],
                 ),
               ),
               const SizedBox(
                 height: 30,
               ),
-              CustomButton(func: () {}, text: "Create Account"),
+              CustomButton(
+                  func: () {
+                    AuthController.I
+                        .register(email.text.trim(), password.text.trim());
+                  },
+                  text: "Create Account"),
               const SizedBox(
                 height: 30,
               ),

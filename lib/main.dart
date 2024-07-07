@@ -9,11 +9,19 @@ import 'package:jotter_mapper/themes/theme.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load Prerequisites
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Load States and Routing
   SharedPreferencesController.initialize();
   AuthController.initialize();
   GlobalRouter.initialize();
+
+  // Load User Session
+  await AuthController.I.loadSession();
+
   runApp(const MainApp());
 }
 

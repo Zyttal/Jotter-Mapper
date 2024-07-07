@@ -4,6 +4,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:jotter_mapper/controllers/auth_controller.dart';
 import 'package:jotter_mapper/widgets/back_button.dart';
 import 'package:jotter_mapper/widgets/custom_button.dart';
+import 'package:jotter_mapper/widgets/waiting_dialog.dart';
 import 'package:jotter_mapper/widgets/text_field_with_label.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 
@@ -18,27 +19,39 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   late GlobalKey<FormState> formKey;
-  late TextEditingController email, password;
-  late FocusNode emailFn, passwordFn;
+  late TextEditingController nickname, email, password, confirmPassword;
+  late FocusNode nicknameFn, emailFn, passwordFn, confirmPasswordFn;
   bool obfuscate = false;
 
   @override
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
+
+    nickname = TextEditingController();
     email = TextEditingController();
     password = TextEditingController();
+    confirmPassword = TextEditingController();
+
+    nicknameFn = FocusNode();
     emailFn = FocusNode();
     passwordFn = FocusNode();
+    confirmPasswordFn = FocusNode();
   }
 
   @override
   void dispose() {
     super.dispose();
+
+    nickname.dispose();
     email.dispose();
     password.dispose();
+    confirmPassword.dispose();
+
+    nicknameFn.dispose();
     emailFn.dispose();
     passwordFn.dispose();
+    confirmPasswordFn.dispose();
   }
 
   @override
@@ -125,8 +138,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             errorText:
                                 "Email Address cannot exceed 32 characters"),
                       ]).call,
-                      controller: email,
-                      fn: emailFn,
+                      controller: nickname,
+                      fn: nicknameFn,
                     ),
                     SizedBox(
                       height: 20,
@@ -172,26 +185,36 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    // TextFieldWithLabel(
-                    //   label: "Confirm Password",
-                    //   icon: Icon(Icons.lock_outline_rounded),
-                    //   controller: password,
-                    //   fn: passwordFn,
-                    //   isPassword: true,
-                    //   validator: MultiValidator([
-                    //     RequiredValidator(errorText: "Password is required"),
-                    //     MinLengthValidator(12,
-                    //         errorText:
-                    //             "Password must be at least 12 characters long"),
-                    //     MaxLengthValidator(128,
-                    //         errorText: "Password cannot exceed 128 characters"),
-                    //     PatternValidator(
-                    //       r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
-                    //       errorText:
-                    //           'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.',
-                    //     ),
-                    //   ]).call,
-                    // ),
+                    TextFieldWithLabel(
+                        label: "Confirm Password",
+                        icon: Icon(Icons.lock_outline_rounded),
+                        controller: confirmPassword,
+                        fn: confirmPasswordFn,
+                        isPassword: true,
+                        validator: (v) {
+                          String? doesMatchPasswords =
+                              password.text == confirmPassword.text
+                                  ? null
+                                  : "Passwords doesn't match";
+                          if (doesMatchPasswords != null) {
+                            return doesMatchPasswords;
+                          } else {
+                            return MultiValidator([
+                              RequiredValidator(
+                                  errorText: "Password is required"),
+                              MinLengthValidator(12,
+                                  errorText:
+                                      "Password must be at least 12 characters long"),
+                              MaxLengthValidator(128,
+                                  errorText:
+                                      "Password cannot exceed 72 characters"),
+                              PatternValidator(
+                                  r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
+                                  errorText:
+                                      'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.'),
+                            ]).call(v);
+                          }
+                        }),
                   ],
                 ),
               ),
@@ -200,8 +223,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               CustomButton(
                   func: () {
-                    AuthController.I
-                        .register(email.text.trim(), password.text.trim());
+                    if (formKey.currentState!.validate()) {
+                      WaitingDialog.show(context,
+                          future: AuthController.I.register(email.text.trim(),
+                              password.text.trim(), nickname.text.trim()));
+                    }
                   },
                   text: "Create Account"),
               const SizedBox(

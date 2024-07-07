@@ -8,6 +8,7 @@ import 'package:jotter_mapper/screens/content/home_screen.dart';
 import 'package:jotter_mapper/widgets/custom_button.dart';
 import 'package:jotter_mapper/widgets/text_field_with_label.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
+import 'package:jotter_mapper/widgets/waiting_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String name = "Login Screen";
@@ -165,8 +166,9 @@ class _LoginScreenState extends State<LoginScreen> {
               CustomButton(
                   func: () async {
                     if (formKey.currentState!.validate()) {
-                      AuthController.I
-                          .login(email.text.trim(), password.text.trim());
+                      WaitingDialog.show(context,
+                          future: AuthController.I
+                              .login(email.text.trim(), password.text.trim()));
                     }
                   },
                   text: "Log in"),

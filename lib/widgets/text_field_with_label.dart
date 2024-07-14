@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 
+// ignore: must_be_immutable
 class TextFieldWithLabel extends StatefulWidget {
   TextFieldWithLabel(
       {super.key,

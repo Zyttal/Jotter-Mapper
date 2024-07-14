@@ -1,7 +1,10 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jotter_mapper/controllers/auth_controller.dart';
+import 'package:jotter_mapper/controllers/location_controller.dart';
 import 'package:jotter_mapper/controllers/shared_preferences.dart';
 import 'package:jotter_mapper/firebase_options.dart';
 import 'package:jotter_mapper/routing/router.dart';
@@ -10,9 +13,18 @@ import 'package:jotter_mapper/themes/theme.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Persist Full Screen Mode and Portrait Orientation
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
   // Load Prerequisites
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseAppCheck.instance
+      .activate(androidProvider: AndroidProvider.playIntegrity);
+  LocationController.initialize();
 
   // Load States and Routing
   SharedPreferencesController.initialize();

@@ -1,11 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jotter_mapper/controllers/auth_controller.dart';
-import 'package:jotter_mapper/controllers/user_data_controller.dart';
 import 'package:jotter_mapper/custompainter_assets/header_painter.dart';
-import 'package:jotter_mapper/services/firebase_services.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:jotter_mapper/widgets/custom_button.dart';
+import 'package:jotter_mapper/widgets/custom_card_widget.dart';
+import 'package:jotter_mapper/widgets/waiting_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,18 +21,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Map<String, dynamic>? user;
-  // final UserDataController = GetIt.
   final userDataController = AuthController.instance.userDataController;
-  late User user;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
-
-    print("Email Address: ${userDataController?.currentUser?.email}");
-    print("Display Name: ${userDataController?.currentUser?.displayName}");
-    print("Photo URL: ${userDataController?.currentUser?.photoURL}");
   }
 
   @override
@@ -49,7 +47,218 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 painter: HeaderPainter(),
                 size: Size(MediaQuery.of(context).size.width, 70),
               ),
+              Center(
+                  child: Container(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                        radius: 80,
+                        backgroundImage:
+                            userDataController.currentUser!.photoURL!.isNotEmpty
+                                ? NetworkImage(
+                                    userDataController.currentUser!.photoURL!)
+                                : const AssetImage(
+                                    'assets/images/default_avatar.png')),
+                    Positioned(
+                      bottom: -10,
+                      right: -10,
+                      child: IconButton(
+                          onPressed: () async {
+                            final XFile? image = await _picker.pickImage(
+                                source: ImageSource.gallery);
+                            if (image != null) {
+                              try {
+                                String user_id =
+                                    userDataController.currentUser!.uid;
+                                final ref = FirebaseStorage.instance
+                                    .ref()
+                                    .child('user_photos/$user_id.jpg');
+                                final result =
+                                    await ref.putFile(File(image.path));
+                                final photoUrl =
+                                    await result.ref.getDownloadURL();
+
+                                userDataController.updateUserPhotoUrl(photoUrl);
+                              } catch (e) {
+                                print("Error Uploading Image: $e");
+                              }
+                            }
+                          },
+                          icon: const Icon(
+                            CupertinoIcons.camera_circle,
+                            color: ColorPalette.washedWhite,
+                            size: 30,
+                          )),
+                    )
+                  ],
+                ),
+              )),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              children: [
+                CustomCardWidget(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Account Information",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.edit,
+                                size: 20,
+                              ))
+                        ],
+                      ),
+                      const Divider(
+                        color: ColorPalette.dark400,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Display Name",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Email Address",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                userDataController.currentUser!.displayName,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                userDataController.currentUser!.email,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                CustomCardWidget(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "App Information",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const Divider(
+                        color: ColorPalette.dark400,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            children: [
+                              const Icon(
+                                Icons.info_outline,
+                                size: 30,
+                                color: ColorPalette.washedWhite,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "About Us",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              )
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              const Icon(
+                                Icons.settings,
+                                size: 30,
+                                color: ColorPalette.washedWhite,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Settings",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              )
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              const Icon(
+                                CupertinoIcons.question_circle,
+                                size: 30,
+                                color: ColorPalette.washedWhite,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "About Us",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                CustomButton(
+                    func: () {
+                      WaitingDialog.show(context,
+                          future: AuthController.I.logout());
+                    },
+                    text: "Sign Out")
+              ],
+            ),
           ),
         ],
       ),

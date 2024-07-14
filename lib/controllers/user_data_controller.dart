@@ -33,4 +33,9 @@ class UserDataController with ChangeNotifier {
         ?.updateProfile(displayName: displayName);
     notifyListeners();
   }
+
+  Future<void> updateUserPhotoUrl(String photoUrl) async {
+    await FirebaseAuth.instance.currentUser!.updatePhotoURL(photoUrl);
+    notifyListeners();
+  }
 }

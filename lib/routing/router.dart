@@ -39,7 +39,7 @@ class GlobalRouter {
       return null;
     }
 
-    if (AuthController.I.state != AuthState.unauthenticated) {
+    if (AuthController.I.state == AuthState.unauthenticated) {
       if (state.matchedLocation == LoginScreen.route) {
         return null;
       }
@@ -57,9 +57,9 @@ class GlobalRouter {
 
     router = GoRouter(
         navigatorKey: _rootNavigatorKey,
-        initialLocation: LandingScreen.route,
-        redirect: handleRedirect,
-        refreshListenable: AuthController.I,
+        initialLocation: MapScreen.route,
+        // redirect: handleRedirect,
+        // refreshListenable: AuthController.I,
         routes: [
           GoRoute(
               parentNavigatorKey: _rootNavigatorKey,

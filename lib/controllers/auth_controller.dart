@@ -51,6 +51,8 @@ class AuthController with ChangeNotifier {
 
     await FirebaseAuth.instance.currentUser
         ?.updateProfile(displayName: displayName);
+
+    FireStoreServices.storeUser(email, userCredential.user!.uid);
   }
 
   handleUserChanges(User? user) {
@@ -62,12 +64,6 @@ class AuthController with ChangeNotifier {
 
       _userDataController ??= UserDataController();
       _userDataController?.loadCurrentUser();
-
-      // print("Email Address: ${_userDataController?.currentUser?.email}");
-      // print("Display Name: ${_userDataController?.currentUser?.displayName}");
-      // print("Photo URL: ${_userDataController?.currentUser?.photoURL}");
-
-      FireStoreServices.storeUser(user.email ?? "No email available", user.uid);
     }
     notifyListeners();
   }

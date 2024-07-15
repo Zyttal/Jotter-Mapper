@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jotter_mapper/controllers/auth_controller.dart';
 import 'package:jotter_mapper/enum/auth_enum.dart';
 import 'package:jotter_mapper/screens/auth/login_screen.dart';
 import 'package:jotter_mapper/screens/auth/registration_screen.dart';
+import 'package:jotter_mapper/screens/content/add_entry_screen.dart';
 import 'package:jotter_mapper/screens/content/home_screen.dart';
 import 'package:jotter_mapper/screens/content/map_screen.dart';
 import 'package:jotter_mapper/screens/content/entry_details_screen.dart';
@@ -95,6 +97,13 @@ class GlobalRouter {
               builder: (context, state) {
                 String? entryId = state.pathParameters['id'];
                 return EntryDetailsScreen(entryId: entryId);
+              }),
+          GoRoute(
+              path: AddEntryScreen.route,
+              name: AddEntryScreen.name,
+              builder: (context, state) {
+                LatLng? location = state.extra as LatLng;
+                return AddEntryScreen(location: location);
               }),
           ShellRoute(
             navigatorKey: _shellNavigatorKey,

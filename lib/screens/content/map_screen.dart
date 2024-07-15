@@ -2,8 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jotter_mapper/controllers/location_controller.dart';
+import 'package:jotter_mapper/static_data.dart';
+import 'package:jotter_mapper/themes/custom_color_palette.dart';
+import 'package:jotter_mapper/widgets/entry_dialog.dart';
 
 import 'package:jotter_mapper/widgets/waiting_dialog.dart';
 
@@ -21,12 +25,14 @@ class _MapScreenState extends State<MapScreen> {
   LatLng? currentLocation;
   bool isLoading = true;
   String? _mapStyle;
+  final List<Marker> _markers = [];
 
   @override
   void initState() {
     super.initState();
     loadCurrentLocation();
     loadMapStyle();
+    initializeMarkers();
   }
 
   Future<void> loadCurrentLocation() async {
@@ -43,6 +49,21 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  void initializeMarkers() {
+    for (var entry in StaticData.entries) {
+      final marker = Marker(
+        markerId: MarkerId(entry.entryId),
+        position: entry.location,
+        onTap: () => showEntryDialog(context, entry),
+        icon: BitmapDescriptor.defaultMarker,
+      );
+
+      _markers.add(marker);
+    }
+
+    setState(() {});
+  }
+
   Future<void> loadMapStyle() async {
     _mapStyle = await rootBundle.loadString('assets/map_style.json');
   }
@@ -52,7 +73,9 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       body: isLoading
           ? const Center(
-              child: LoadingWidget(),
+              child: SpinKitChasingDots(
+                color: ColorPalette.primary100,
+              ),
             )
           : GoogleMap(
               style: _mapStyle,
@@ -61,8 +84,9 @@ class _MapScreenState extends State<MapScreen> {
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
+              markers: Set<Marker>.of(_markers),
               onTap: (LatLng tappedLocation) {
-                print(tappedLocation);
+                addEntryDialog(context, tappedLocation);
               },
               myLocationEnabled: true,
               myLocationButtonEnabled: false,

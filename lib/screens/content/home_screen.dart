@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jotter_mapper/controllers/joke_controller.dart';
 import 'package:jotter_mapper/custompainter_assets/header_painter.dart';
+import 'package:jotter_mapper/routing/router.dart';
+import 'package:jotter_mapper/screens/content/map_screen.dart';
 import 'package:jotter_mapper/static_data.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
+import 'package:jotter_mapper/widgets/custom_button.dart';
 import 'package:jotter_mapper/widgets/custom_card_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -49,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverAppBar(
             pinned: true,
             floating: false,
-            expandedHeight: 125,
+            expandedHeight: 100,
             backgroundColor: Colors.transparent,
             elevation: 0,
             scrolledUnderElevation: 0,
@@ -62,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Positioned(
-                      top: 25,
+                      top: 30,
                       left: 20,
                       child: Text(
                         "Home",
@@ -73,81 +76,140 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-        body: ListView.builder(
-          itemCount: StaticData.posts.length + 1,
-          itemBuilder: (context, index) {
-            if (index == StaticData.posts.length) {
-              return Align(
-                alignment: Alignment.bottomCenter,
+        body: StaticData.entries.isEmpty
+            ? Center(
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  child: CustomCardWidget(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          joke ?? ';((',
-                          style: Theme.of(context).textTheme.bodySmall,
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'No entries found.',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(fontWeight: FontWeight.normal),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Go to the map screen to add an entry.',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(fontWeight: FontWeight.normal),
+                      ),
+                      SizedBox(height: 20),
+                      CustomButton(
+                          func: () {
+                            GlobalRouter.I.router.go(MapScreen.route);
+                          },
+                          text: "To Map Screen"),
+                      if (joke != null) SizedBox(height: 20),
+                      if (joke != null)
+                        CustomCardWidget(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                joke ?? ';((',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                    ],
                   ),
                 ),
-              );
-            }
+              )
+            : ListView.builder(
+                itemCount: StaticData.entries.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == StaticData.entries.length) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
+                      child: CustomCardWidget(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              joke ?? ';((',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
 
-            final Post post = StaticData.posts[index];
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                color: ColorPalette.dark200,
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(color: ColorPalette.dark300),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.network(
-                    post.imageUrl,
-                    width: MediaQuery.of(context).size.width,
-                    height: 170,
-                    fit: BoxFit.cover,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          post.title,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          post.content,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(color: ColorPalette.dark600),
-                        ),
-                        const SizedBox(height: 20),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(post.date),
-                        ),
-                      ],
+                  final Entry entry = StaticData.entries[index];
+                  return GestureDetector(
+                    onTap: () {
+                      GlobalRouter.I.router.push('/entry/${entry.entryId}');
+                    },
+                    child: Container(
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        color: ColorPalette.dark200,
+                        borderRadius: BorderRadius.circular(25),
+                        border: Border.all(color: ColorPalette.dark300),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (entry.imageUrls != null &&
+                              entry.imageUrls!.isNotEmpty)
+                            Image.network(
+                              entry.imageUrls![0],
+                              width: MediaQuery.of(context).size.width,
+                              height: 170,
+                              fit: BoxFit.cover,
+                            )
+                          else
+                            const SizedBox(
+                              height: 170,
+                              child: Center(child: Text("No Image...")),
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  entry.title,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  entry.subtitle ?? "",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(color: ColorPalette.dark600),
+                                ),
+                                const SizedBox(height: 20),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    "${entry.date} at ${entry.locationName}",
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
     );
   }

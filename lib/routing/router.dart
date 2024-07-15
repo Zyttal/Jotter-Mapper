@@ -9,6 +9,7 @@ import 'package:jotter_mapper/screens/auth/login_screen.dart';
 import 'package:jotter_mapper/screens/auth/registration_screen.dart';
 import 'package:jotter_mapper/screens/content/home_screen.dart';
 import 'package:jotter_mapper/screens/content/map_screen.dart';
+import 'package:jotter_mapper/screens/content/entry_details_screen.dart';
 import 'package:jotter_mapper/screens/content/profile_screen.dart';
 import 'package:jotter_mapper/screens/content/wrapper.dart';
 import 'package:jotter_mapper/screens/landing_screen.dart';
@@ -86,7 +87,14 @@ class GlobalRouter {
               path: RegistrationScreen.route,
               name: RegistrationScreen.name,
               builder: (context, _) {
-                return RegistrationScreen();
+                return const RegistrationScreen();
+              }),
+          GoRoute(
+              path: EntryDetailsScreen.route,
+              name: EntryDetailsScreen.name,
+              builder: (context, state) {
+                String? entryId = state.pathParameters['id'];
+                return EntryDetailsScreen(entryId: entryId);
               }),
           ShellRoute(
             navigatorKey: _shellNavigatorKey,
@@ -118,7 +126,7 @@ class GlobalRouter {
                 child: child,
               );
             },
-          )
+          ),
         ]);
   }
 }

@@ -14,7 +14,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Persist Full Screen Mode and Portrait Orientation
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  // await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);

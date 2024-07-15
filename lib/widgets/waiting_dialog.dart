@@ -61,7 +61,7 @@ class LoadingWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SpinKitChasingDots(
+            const SpinKitChasingDots(
               color: ColorPalette.primary100,
               size: 32,
             ),

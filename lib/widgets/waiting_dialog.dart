@@ -39,6 +39,20 @@ class WaitingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return LoadingWidget(prompt: prompt);
+  }
+}
+
+class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({
+    super.key,
+    this.prompt,
+  });
+
+  final String? prompt;
+
+  @override
+  Widget build(BuildContext context) {
     return Dialog(
       insetPadding: EdgeInsets.zero,
       elevation: 0,

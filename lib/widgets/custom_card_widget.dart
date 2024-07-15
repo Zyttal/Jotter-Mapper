@@ -10,6 +10,7 @@ class CustomCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
             color: ColorPalette.dark200,

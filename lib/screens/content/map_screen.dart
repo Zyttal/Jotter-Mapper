@@ -1,8 +1,11 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jotter_mapper/controllers/location_controller.dart';
+
+import 'package:jotter_mapper/widgets/waiting_dialog.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -49,7 +52,7 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       body: isLoading
           ? const Center(
-              child: CircularProgressIndicator(),
+              child: LoadingWidget(),
             )
           : GoogleMap(
               style: _mapStyle,
@@ -58,9 +61,12 @@ class _MapScreenState extends State<MapScreen> {
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
+              onTap: (LatLng tappedLocation) {
+                print(tappedLocation);
+              },
               myLocationEnabled: true,
               myLocationButtonEnabled: false,
-              zoomControlsEnabled: true,
+              zoomControlsEnabled: false,
             ),
     );
   }

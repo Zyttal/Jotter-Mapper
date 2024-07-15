@@ -7,7 +7,6 @@ import 'package:jotter_mapper/controllers/auth_controller.dart';
 import 'package:jotter_mapper/enum/auth_enum.dart';
 import 'package:jotter_mapper/screens/auth/login_screen.dart';
 import 'package:jotter_mapper/screens/auth/registration_screen.dart';
-import 'package:jotter_mapper/screens/content/entries_screen.dart';
 import 'package:jotter_mapper/screens/content/home_screen.dart';
 import 'package:jotter_mapper/screens/content/map_screen.dart';
 import 'package:jotter_mapper/screens/content/profile_screen.dart';
@@ -57,7 +56,7 @@ class GlobalRouter {
 
     router = GoRouter(
         navigatorKey: _rootNavigatorKey,
-        initialLocation: MapScreen.route,
+        initialLocation: HomeScreen.route,
         // redirect: handleRedirect,
         // refreshListenable: AuthController.I,
         routes: [
@@ -105,13 +104,6 @@ class GlobalRouter {
                   name: MapScreen.name,
                   builder: (context, _) {
                     return const MapScreen();
-                  }),
-              GoRoute(
-                  parentNavigatorKey: _shellNavigatorKey,
-                  path: EntriesScreen.route,
-                  name: EntriesScreen.name,
-                  builder: (context, _) {
-                    return const EntriesScreen();
                   }),
               GoRoute(
                   parentNavigatorKey: _shellNavigatorKey,

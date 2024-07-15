@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jotter_mapper/routing/router.dart';
-import 'package:jotter_mapper/screens/content/entries_screen.dart';
 import 'package:jotter_mapper/screens/content/home_screen.dart';
 import 'package:jotter_mapper/screens/content/profile_screen.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
@@ -22,7 +21,6 @@ class _AppWrapperState extends State<AppWrapper> {
   final List<String> routes = [
     HomeScreen.route,
     MapScreen.route,
-    EntriesScreen.route,
     ProfileScreen.route
   ];
 
@@ -50,8 +48,6 @@ class _AppWrapperState extends State<AppWrapper> {
           BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(CupertinoIcons.map), label: "Map"),
-          BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.book), label: "Entries"),
           BottomNavigationBarItem(
               icon: Icon(Icons.person_2_outlined), label: "Profile")
         ],

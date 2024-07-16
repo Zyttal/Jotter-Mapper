@@ -53,6 +53,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
           title: title.text,
           subtitle: subtitle.text.isEmpty ? null : subtitle.text,
           content: content.text,
+          images: _selectedImages,
           location: widget.location,
           locationName: widget.address);
 

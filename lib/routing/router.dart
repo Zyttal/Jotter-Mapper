@@ -31,6 +31,9 @@ class GlobalRouter {
 
   FutureOr<String?> handleRedirect(
       BuildContext context, GoRouterState state) async {
+    if (state.matchedLocation == LandingScreen.route) {
+      return null;
+    }
     if (AuthController.I.state == AuthState.authenticated) {
       if (state.matchedLocation == LoginScreen.route) {
         return HomeScreen.route;
@@ -59,7 +62,7 @@ class GlobalRouter {
 
     router = GoRouter(
         navigatorKey: _rootNavigatorKey,
-        initialLocation: HomeScreen.route,
+        initialLocation: LandingScreen.route,
         redirect: handleRedirect,
         refreshListenable: AuthController.I,
         routes: [

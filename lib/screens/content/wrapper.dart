@@ -31,9 +31,9 @@ class _AppWrapperState extends State<AppWrapper> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: ColorPalette.primary100,
-        selectedLabelStyle: TextStyle(color: ColorPalette.primary100),
+        selectedLabelStyle: const TextStyle(color: ColorPalette.primary100),
         unselectedItemColor: ColorPalette.washedWhite,
-        unselectedLabelStyle: TextStyle(color: ColorPalette.washedWhite),
+        unselectedLabelStyle: const TextStyle(color: ColorPalette.washedWhite),
         useLegacyColorScheme: false,
         backgroundColor: ColorPalette.dark200,
         currentIndex: index,

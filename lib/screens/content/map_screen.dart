@@ -6,11 +6,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jotter_mapper/controllers/entries_controller.dart';
 import 'package:jotter_mapper/controllers/location_controller.dart';
-import 'package:jotter_mapper/static_data.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:jotter_mapper/widgets/entry_dialog.dart';
-
-import 'package:jotter_mapper/widgets/waiting_dialog.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -23,6 +20,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController? _mapController;
   LatLng? currentLocation;
   bool isLoading = true;
   String? _mapStyle;
@@ -34,6 +32,12 @@ class _MapScreenState extends State<MapScreen> {
     loadCurrentLocation();
     loadMapStyle();
     initializeMarkers();
+  }
+
+  @override
+  void dispose() {
+    _mapController?.dispose();
+    super.dispose();
   }
 
   Future<void> loadCurrentLocation() async {
@@ -61,8 +65,6 @@ class _MapScreenState extends State<MapScreen> {
 
       _markers.add(marker);
     }
-
-    setState(() {});
   }
 
   Future<void> loadMapStyle() async {

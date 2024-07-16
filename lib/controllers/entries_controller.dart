@@ -61,6 +61,8 @@ class EntriesController with ChangeNotifier {
       final userId = UserDataController.I.currentUser!.uid;
       List<String>? imageUrls;
 
+      print("These are the images passed: $images");
+
       if (images != null && images.isNotEmpty) {
         imageUrls = [];
         for (var image in images) {
@@ -72,6 +74,7 @@ class EntriesController with ChangeNotifier {
           imageUrls.add(imageUrl);
         }
       }
+      print(imageUrls);
 
       final newEntry = Entry(
           entryId: '',
@@ -96,6 +99,7 @@ class EntriesController with ChangeNotifier {
           .collection('entries')
           .doc(entryId)
           .delete();
+
       entries.removeWhere((entry) => entry.entryId == entryId);
 
       notifyListeners();

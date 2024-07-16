@@ -32,8 +32,10 @@ class UserDataController with ChangeNotifier {
   }
 
   Future<void> updateDisplayName(String displayName) async {
+    String? photoUrl = currentUser?.photoURL;
     await FirebaseAuth.instance.currentUser
-        ?.updateProfile(displayName: displayName);
+        ?.updateProfile(displayName: displayName, photoURL: photoUrl);
+
     await loadCurrentUser();
   }
 

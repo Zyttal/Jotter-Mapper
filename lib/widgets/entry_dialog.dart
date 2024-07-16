@@ -81,6 +81,7 @@ void addEntryDialog(BuildContext context, LatLng tappedLocation) {
                       'address': fullAddress
                     };
 
+                    Navigator.of(context).pop();
                     GlobalRouter.I.router
                         .push(AddEntryScreen.route, extra: extra);
                   },

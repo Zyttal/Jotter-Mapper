@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:jotter_mapper/controllers/entries_controller.dart';
 import 'package:jotter_mapper/controllers/joke_controller.dart';
 import 'package:jotter_mapper/controllers/user_data_controller.dart';
@@ -31,51 +33,75 @@ class _HomeScreenState extends State<HomeScreen> {
     userId = UserDataController.I.currentUser?.uid ?? '';
   }
 
+  Future<void> _refreshEntries() async {
+    setState(() {
+      isLoading = true;
+    });
+    await EntriesController.I.fetchEntries(userId);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverAppBar(
-            pinned: true,
-            floating: false,
-            expandedHeight: 100,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                children: [
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: HeaderPainter(),
+      body: RefreshIndicator(
+        onRefresh: _refreshEntries,
+        color: ColorPalette.primary100,
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            SliverAppBar(
+              pinned: true,
+              floating: false,
+              expandedHeight: 100,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: HeaderPainter(),
+                      ),
                     ),
-                  ),
-                  Positioned(
-                      top: 30,
-                      left: 20,
-                      child: Text(
-                        "Home",
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ))
-                ],
+                    Positioned(
+                        top: 30,
+                        left: 20,
+                        child: Text(
+                          "Home",
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        )),
+                    Positioned(
+                        top: 20,
+                        right: 20,
+                        child: IconButton(
+                          icon: Icon(Icons.refresh_outlined),
+                          onPressed: _refreshEntries,
+                        ))
+                  ],
+                ),
               ),
             ),
+          ],
+          body: FutureBuilder<void>(
+            future: EntriesController.I.fetchEntries(userId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                    child: SpinKitChasingDots(
+                  color: ColorPalette.primary100,
+                ));
+              } else if (snapshot.hasError) {
+                return const Center(child: Text('Error loading entries'));
+              } else {
+                return EntriesController.I.entries.isEmpty
+                    ? const EmptyEntriesWidget()
+                    : const EntriesListWidget();
+              }
+            },
           ),
-        ],
-        body: FutureBuilder<void>(
-          future: EntriesController.I.fetchEntries(userId),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error loading entries'));
-            } else {
-              return EntriesController.I.entries.isEmpty
-                  ? const EmptyEntriesWidget()
-                  : const EntriesListWidget();
-            }
-          },
         ),
       ),
     );
@@ -89,23 +115,30 @@ class EntriesListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final itemCount = EntriesController.I.entries.length + 1;
+
     return ListView.builder(
-      itemCount: EntriesController.I.entries.length,
+      itemCount: itemCount,
       itemBuilder: (context, index) {
         if (index == EntriesController.I.entries.length) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: CustomCardWidget(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
+          return Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: CustomButton(func: () {}, text: "Add another Entry"),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: CustomCardWidget(
+                  child: Text(
                     JokeController.I.joke ?? ';((',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           );
         }
 
@@ -191,6 +224,10 @@ class EmptyEntriesWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SvgPicture.asset(
+              "assets/images/ob_graphic3.svg",
+              height: 150,
+            ),
             Text(
               'No entries found.',
               style: Theme.of(context)
@@ -215,14 +252,9 @@ class EmptyEntriesWidget extends StatelessWidget {
             const SizedBox(height: 20),
             if (JokeController.I.joke != null)
               CustomCardWidget(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      JokeController.I.joke ?? ';((',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
+                child: Text(
+                  JokeController.I.joke ?? ';((',
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
           ],

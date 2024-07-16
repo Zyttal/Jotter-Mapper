@@ -7,6 +7,7 @@ import 'package:jotter_mapper/custompainter_assets/header_painter.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:jotter_mapper/widgets/custom_button.dart';
 import 'package:jotter_mapper/widgets/custom_card_widget.dart';
+import 'package:jotter_mapper/widgets/text_field_with_label.dart';
 import 'package:jotter_mapper/widgets/waiting_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,19 +21,32 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ImagePicker _picker = ImagePicker();
-  String photoURL = UserDataController.I.currentUser!.photoURL!;
+  String? photoURL;
+  late TextEditingController name;
+  late FocusNode namefn;
 
   @override
   void initState() {
     super.initState();
     photoURL = UserDataController.I.currentUser?.photoURL ?? '';
     UserDataController.I.addListener(_updatePhotoURL);
+
+    name = TextEditingController();
+    namefn = FocusNode();
   }
 
   void _updatePhotoURL() {
     setState(() {
       photoURL = UserDataController.I.currentUser?.photoURL ?? '';
     });
+  }
+
+  @override
+  void dispose() {
+    name.dispose();
+    namefn.dispose();
+    UserDataController.I.removeListener(_updatePhotoURL);
+    super.dispose();
   }
 
   @override
@@ -45,136 +59,170 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         backgroundColor: ColorPalette.dark200,
       ),
-      body: Column(
-        children: [
-          Stack(
-            children: [
-              CustomPaint(
-                painter: HeaderPainter(),
-                size: Size(MediaQuery.of(context).size.width, 70),
-              ),
-              Center(
-                  child: Container(
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                        radius: 80,
-                        backgroundImage: photoURL.isNotEmpty
-                            ? NetworkImage(photoURL)
-                            : const AssetImage(
-                                'assets/images/default_avatar.png')),
-                    Positioned(
-                      bottom: -10,
-                      right: -10,
-                      child: IconButton(
-                          onPressed: () async {
-                            final XFile? image = await _picker.pickImage(
-                                source: ImageSource.gallery);
-                            if (image != null) {
-                              await WaitingDialog.show(context,
-                                  future:
-                                      UserDataController.I.uploadImage(image));
-                            }
-                          },
-                          icon: const Icon(
-                            CupertinoIcons.camera_circle,
-                            color: ColorPalette.washedWhite,
-                            size: 30,
-                          )),
-                    )
-                  ],
-                ),
-              )),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Column(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
               children: [
-                CustomCardWidget(
-                  child: Column(
+                CustomPaint(
+                  painter: HeaderPainter(),
+                  size: Size(MediaQuery.of(context).size.width, 70),
+                ),
+                Center(
+                    child: Container(
+                  child: Stack(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Account Information",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.edit,
-                                size: 20,
-                              ))
-                        ],
-                      ),
-                      const Divider(
-                        color: ColorPalette.dark400,
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Display Name",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "Email Address",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                UserDataController.I.currentUser!.displayName,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                UserDataController.I.currentUser!.email,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
+                      CircleAvatar(
+                          radius: 80,
+                          backgroundImage:
+                              photoURL != null && photoURL!.isNotEmpty
+                                  ? NetworkImage(photoURL!)
+                                  : const AssetImage(
+                                      'assets/images/default_avatar.png')),
+                      Positioned(
+                        bottom: -10,
+                        right: -10,
+                        child: IconButton(
+                            onPressed: () async {
+                              final XFile? image = await _picker.pickImage(
+                                  source: ImageSource.gallery);
+                              if (image != null) {
+                                await WaitingDialog.show(context,
+                                    future: UserDataController.I
+                                        .uploadImage(image));
+                              }
+                            },
+                            icon: const Icon(
+                              CupertinoIcons.camera_circle,
+                              color: ColorPalette.washedWhite,
+                              size: 30,
+                            )),
+                      )
                     ],
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const AppInformationWidget(),
-                const SizedBox(
-                  height: 20,
-                ),
-                CustomButton(
-                    func: () {
-                      WaitingDialog.show(context,
-                          future: AuthController.I.logout());
-                    },
-                    text: "Sign Out")
+                )),
               ],
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Column(
+                children: [
+                  CustomCardWidget(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Account Information",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextFieldWithLabel(
+                                                controller: name,
+                                                fn: namefn,
+                                                label: "Display Name",
+                                                icon: Icon(
+                                                    Icons.person_2_outlined),
+                                                validator: null,
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              CustomButton(
+                                                  func: () {
+                                                    UserDataController.I
+                                                        .updateDisplayName(
+                                                            name.text);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  text: "Edit name")
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                },
+                                icon: const Icon(
+                                  Icons.edit,
+                                  size: 20,
+                                ))
+                          ],
+                        ),
+                        const Divider(
+                          color: ColorPalette.dark400,
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Display Name",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  "Email Address",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  UserDataController.I.currentUser!.displayName,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  UserDataController.I.currentUser!.email,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const AppInformationWidget(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CustomButton(
+                      func: () {
+                        WaitingDialog.show(context,
+                            future: AuthController.I.logout());
+                      },
+                      text: "Sign Out")
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

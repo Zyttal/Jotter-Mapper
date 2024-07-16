@@ -6,7 +6,7 @@ import 'package:jotter_mapper/models/entries_model.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/content/add_entry_screen.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
-import 'package:jotter_mapper/widgets/custom_button.dart';
+import 'package:jotter_mapper/widgets/general-widgets/custom_button.dart';
 
 void addEntryDialog(BuildContext context, LatLng tappedLocation) {
   final coordsDetailsController = CoordsDetailsController();

@@ -5,10 +5,12 @@ import 'package:jotter_mapper/controllers/auth_controller.dart';
 import 'package:jotter_mapper/controllers/user_data_controller.dart';
 import 'package:jotter_mapper/custompainter_assets/header_painter.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
-import 'package:jotter_mapper/widgets/custom_button.dart';
-import 'package:jotter_mapper/widgets/custom_card_widget.dart';
-import 'package:jotter_mapper/widgets/text_field_with_label.dart';
-import 'package:jotter_mapper/widgets/waiting_dialog.dart';
+import 'package:jotter_mapper/widgets/general-widgets/custom_button.dart';
+import 'package:jotter_mapper/widgets/general-widgets/custom_card_widget.dart';
+import 'package:jotter_mapper/widgets/profile-widgets/account_information.dart';
+import 'package:jotter_mapper/widgets/profile-widgets/app_information_widget.dart';
+import 'package:jotter_mapper/widgets/general-widgets/text_field_with_label.dart';
+import 'package:jotter_mapper/widgets/general-widgets/waiting_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -107,104 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Column(
                 children: [
-                  CustomCardWidget(
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Account Information",
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              TextFieldWithLabel(
-                                                controller: name,
-                                                fn: namefn,
-                                                label: "Display Name",
-                                                icon: Icon(
-                                                    Icons.person_2_outlined),
-                                                validator: null,
-                                              ),
-                                              SizedBox(
-                                                height: 20,
-                                              ),
-                                              CustomButton(
-                                                  func: () {
-                                                    UserDataController.I
-                                                        .updateDisplayName(
-                                                            name.text);
-                                                    Navigator.pop(context);
-                                                  },
-                                                  text: "Edit name")
-                                            ],
-                                          ),
-                                        );
-                                      });
-                                },
-                                icon: const Icon(
-                                  Icons.edit,
-                                  size: 20,
-                                ))
-                          ],
-                        ),
-                        const Divider(
-                          color: ColorPalette.dark400,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Display Name",
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  "Email Address",
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  UserDataController.I.currentUser!.displayName,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  UserDataController.I.currentUser!.email,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                  ),
+                  AccountInformation(name: name, namefn: namefn),
                   const SizedBox(
                     height: 20,
                   ),
@@ -223,95 +128,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class AppInformationWidget extends StatelessWidget {
-  const AppInformationWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomCardWidget(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            "App Information",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          const Divider(
-            color: ColorPalette.dark400,
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  const Icon(
-                    Icons.info_outline,
-                    size: 30,
-                    color: ColorPalette.washedWhite,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "About Us",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  const Icon(
-                    Icons.settings,
-                    size: 30,
-                    color: ColorPalette.washedWhite,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "Settings",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  const Icon(
-                    CupertinoIcons.question_circle,
-                    size: 30,
-                    color: ColorPalette.washedWhite,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "About Us",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  )
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-        ],
       ),
     );
   }

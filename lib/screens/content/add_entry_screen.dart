@@ -9,10 +9,10 @@ import 'package:jotter_mapper/controllers/entries_controller.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/content/home_screen.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
-import 'package:jotter_mapper/widgets/back_button.dart';
-import 'package:jotter_mapper/widgets/custom_button.dart';
-import 'package:jotter_mapper/widgets/text_field_with_label.dart';
-import 'package:jotter_mapper/widgets/waiting_dialog.dart';
+import 'package:jotter_mapper/widgets/general-widgets/back_button.dart';
+import 'package:jotter_mapper/widgets/general-widgets/custom_button.dart';
+import 'package:jotter_mapper/widgets/general-widgets/text_field_with_label.dart';
+import 'package:jotter_mapper/widgets/general-widgets/waiting_dialog.dart';
 
 class AddEntryScreen extends StatefulWidget {
   static const String name = "Add Entry Screen";

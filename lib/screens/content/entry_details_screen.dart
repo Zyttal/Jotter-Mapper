@@ -7,8 +7,8 @@ import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/content/home_screen.dart';
 import 'package:jotter_mapper/static_data.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
-import 'package:jotter_mapper/widgets/back_button.dart';
-import 'package:jotter_mapper/widgets/waiting_dialog.dart';
+import 'package:jotter_mapper/widgets/general-widgets/back_button.dart';
+import 'package:jotter_mapper/widgets/general-widgets/waiting_dialog.dart';
 
 class EntryDetailsScreen extends StatelessWidget {
   EntryDetailsScreen({super.key, this.entryId});
@@ -125,7 +125,7 @@ class EntryDetailsScreen extends StatelessWidget {
                   "${entry.date} at ${entry.locationName}",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Text(

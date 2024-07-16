@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:jotter_mapper/controllers/auth_controller.dart';
-import 'package:jotter_mapper/widgets/back_button.dart';
-import 'package:jotter_mapper/widgets/custom_button.dart';
-import 'package:jotter_mapper/widgets/waiting_dialog.dart';
-import 'package:jotter_mapper/widgets/text_field_with_label.dart';
+import 'package:jotter_mapper/widgets/general-widgets/back_button.dart';
+import 'package:jotter_mapper/widgets/general-widgets/custom_button.dart';
+import 'package:jotter_mapper/widgets/general-widgets/waiting_dialog.dart';
+import 'package:jotter_mapper/widgets/general-widgets/text_field_with_label.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 
 class RegistrationScreen extends StatefulWidget {

@@ -18,15 +18,7 @@ void addEntryDialog(BuildContext context, LatLng tappedLocation) {
         future: coordsDetailsController.fetchLocationDetails(tappedLocation),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return AlertDialog(
-              title: Text("Fetching Location Details..."),
-              content: Container(
-                height: 100,
-                child: const SpinKitChasingDots(
-                  color: ColorPalette.primary100,
-                ),
-              ),
-            );
+            return const CustomWaitingDialog();
           } else if (snapshot.hasError) {
             return AlertDialog(
               title: Text("Error"),
@@ -80,6 +72,25 @@ void addEntryDialog(BuildContext context, LatLng tappedLocation) {
       );
     },
   );
+}
+
+class CustomWaitingDialog extends StatelessWidget {
+  const CustomWaitingDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Doing Something..."),
+      content: Container(
+        height: 100,
+        child: const SpinKitChasingDots(
+          color: ColorPalette.primary100,
+        ),
+      ),
+    );
+  }
 }
 
 void showEntryDialog(BuildContext context, Entry entry) {

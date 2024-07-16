@@ -57,9 +57,10 @@ class LoadingWidget extends StatelessWidget {
       insetPadding: EdgeInsets.all(20),
       elevation: 0,
       backgroundColor: ColorPalette.dark200,
-      child: Center(
-        child: SizedBox(
-          height: 125,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 100),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -71,8 +72,8 @@ class LoadingWidget extends StatelessWidget {
               ),
               Text(
                 prompt ?? "Please wait . . .",
-                style: TextStyle(color: ColorPalette.washedWhite),
-              )
+                style: const TextStyle(color: ColorPalette.washedWhite),
+              ),
             ],
           ),
         ),

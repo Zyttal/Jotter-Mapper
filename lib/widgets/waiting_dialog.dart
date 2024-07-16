@@ -54,25 +54,27 @@ class LoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: EdgeInsets.zero,
+      insetPadding: EdgeInsets.all(20),
       elevation: 0,
       backgroundColor: ColorPalette.dark200,
       child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SpinKitChasingDots(
-              color: ColorPalette.primary100,
-              size: 32,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              prompt ?? "Please wait . . .",
-              style: TextStyle(color: ColorPalette.washedWhite),
-            )
-          ],
+        child: SizedBox(
+          height: 125,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SpinKitChasingDots(
+                color: ColorPalette.primary100,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Text(
+                prompt ?? "Please wait . . .",
+                style: TextStyle(color: ColorPalette.washedWhite),
+              )
+            ],
+          ),
         ),
       ),
     );

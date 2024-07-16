@@ -60,8 +60,8 @@ class GlobalRouter {
     router = GoRouter(
         navigatorKey: _rootNavigatorKey,
         initialLocation: HomeScreen.route,
-        // redirect: handleRedirect,
-        // refreshListenable: AuthController.I,
+        redirect: handleRedirect,
+        refreshListenable: AuthController.I,
         routes: [
           GoRoute(
               parentNavigatorKey: _rootNavigatorKey,

@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jotter_mapper/controllers/auth_controller.dart';
+import 'package:jotter_mapper/controllers/entries_controller.dart';
+import 'package:jotter_mapper/controllers/joke_controller.dart';
 import 'package:jotter_mapper/controllers/location_controller.dart';
 import 'package:jotter_mapper/controllers/shared_preferences.dart';
+import 'package:jotter_mapper/controllers/user_data_controller.dart';
 import 'package:jotter_mapper/firebase_options.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/themes/theme.dart';
@@ -33,6 +36,10 @@ Future main() async {
 
   // Load User Session
   await AuthController.I.loadSession();
+  UserDataController.initialize();
+  await UserDataController.I.loadCurrentUser();
+  EntriesController.initialize();
+  JokeController.initialize();
 
   runApp(const MainApp());
 }

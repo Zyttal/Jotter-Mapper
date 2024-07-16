@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:jotter_mapper/controllers/auth_controller.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jotter_mapper/models/user_model.dart';
 import 'package:jotter_mapper/services/firebase_services.dart';
 
@@ -31,11 +34,25 @@ class UserDataController with ChangeNotifier {
   Future<void> updateDisplayName(String displayName) async {
     await FirebaseAuth.instance.currentUser
         ?.updateProfile(displayName: displayName);
-    notifyListeners();
+    await loadCurrentUser();
   }
 
   Future<void> updateUserPhotoUrl(String photoUrl) async {
     await FirebaseAuth.instance.currentUser!.updatePhotoURL(photoUrl);
-    notifyListeners();
+    await loadCurrentUser();
+  }
+
+  Future<void> uploadImage(XFile image) async {
+    try {
+      String userId = currentUser!.uid;
+      final ref =
+          FirebaseStorage.instance.ref().child('user_photos/$userId.jpg');
+      final result = await ref.putFile(File(image.path));
+      final photoUrl = await result.ref.getDownloadURL();
+
+      await updateUserPhotoUrl(photoUrl);
+    } catch (e) {
+      print("Error Uploading Image: $e");
+    }
   }
 }

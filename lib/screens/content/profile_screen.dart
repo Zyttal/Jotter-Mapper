@@ -1,10 +1,8 @@
-import 'dart:io';
-
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jotter_mapper/controllers/auth_controller.dart';
+import 'package:jotter_mapper/controllers/user_data_controller.dart';
 import 'package:jotter_mapper/custompainter_assets/header_painter.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:jotter_mapper/widgets/custom_button.dart';
@@ -21,12 +19,20 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final userDataController = AuthController.instance.userDataController;
   final ImagePicker _picker = ImagePicker();
+  String photoURL = UserDataController.I.currentUser!.photoURL!;
 
   @override
   void initState() {
     super.initState();
+    photoURL = UserDataController.I.currentUser?.photoURL ?? '';
+    UserDataController.I.addListener(_updatePhotoURL);
+  }
+
+  void _updatePhotoURL() {
+    setState(() {
+      photoURL = UserDataController.I.currentUser?.photoURL ?? '';
+    });
   }
 
   @override
@@ -53,12 +59,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     CircleAvatar(
                         radius: 80,
-                        backgroundImage:
-                            userDataController.currentUser!.photoURL!.isNotEmpty
-                                ? NetworkImage(
-                                    userDataController.currentUser!.photoURL!)
-                                : const AssetImage(
-                                    'assets/images/default_avatar.png')),
+                        backgroundImage: photoURL.isNotEmpty
+                            ? NetworkImage(photoURL)
+                            : const AssetImage(
+                                'assets/images/default_avatar.png')),
                     Positioned(
                       bottom: -10,
                       right: -10,
@@ -67,21 +71,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             final XFile? image = await _picker.pickImage(
                                 source: ImageSource.gallery);
                             if (image != null) {
-                              try {
-                                String user_id =
-                                    userDataController.currentUser!.uid;
-                                final ref = FirebaseStorage.instance
-                                    .ref()
-                                    .child('user_photos/$user_id.jpg');
-                                final result =
-                                    await ref.putFile(File(image.path));
-                                final photoUrl =
-                                    await result.ref.getDownloadURL();
-
-                                userDataController.updateUserPhotoUrl(photoUrl);
-                              } catch (e) {
-                                print("Error Uploading Image: $e");
-                              }
+                              await WaitingDialog.show(context,
+                                  future:
+                                      UserDataController.I.uploadImage(image));
                             }
                           },
                           icon: const Icon(
@@ -146,14 +138,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                userDataController.currentUser!.displayName,
+                                UserDataController.I.currentUser!.displayName,
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               const SizedBox(
                                 height: 20,
                               ),
                               Text(
-                                userDataController.currentUser!.email,
+                                UserDataController.I.currentUser!.email,
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ],
@@ -169,85 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                CustomCardWidget(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "App Information",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const Divider(
-                        color: ColorPalette.dark400,
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              const Icon(
-                                Icons.info_outline,
-                                size: 30,
-                                color: ColorPalette.washedWhite,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "About Us",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              const Icon(
-                                Icons.settings,
-                                size: 30,
-                                color: ColorPalette.washedWhite,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Settings",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              const Icon(
-                                CupertinoIcons.question_circle,
-                                size: 30,
-                                color: ColorPalette.washedWhite,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "About Us",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                    ],
-                  ),
-                ),
+                const AppInformationWidget(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -259,6 +173,95 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Sign Out")
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AppInformationWidget extends StatelessWidget {
+  const AppInformationWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomCardWidget(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            "App Information",
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          const Divider(
+            color: ColorPalette.dark400,
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  const Icon(
+                    Icons.info_outline,
+                    size: 30,
+                    color: ColorPalette.washedWhite,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "About Us",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  const Icon(
+                    Icons.settings,
+                    size: 30,
+                    color: ColorPalette.washedWhite,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Settings",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  const Icon(
+                    CupertinoIcons.question_circle,
+                    size: 30,
+                    color: ColorPalette.washedWhite,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "About Us",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 15,
           ),
         ],
       ),

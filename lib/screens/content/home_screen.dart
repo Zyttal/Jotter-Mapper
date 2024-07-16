@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jotter_mapper/controllers/entries_controller.dart';
 import 'package:jotter_mapper/controllers/joke_controller.dart';
+import 'package:jotter_mapper/controllers/user_data_controller.dart';
 import 'package:jotter_mapper/custompainter_assets/header_painter.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/content/map_screen.dart';
@@ -19,29 +21,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? joke;
   bool isLoading = true;
-  final JokeController jokeController = JokeController();
-
-  Future<void> fetchQuote() async {
-    try {
-      final jokeData = await jokeController.fetchJoke();
-      setState(() {
-        joke = jokeData['joke'];
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        joke = 'Failed to Load Quote...';
-        isLoading = false;
-      });
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    fetchQuote();
+    final userId = UserDataController.I.currentUser?.uid ?? '';
+
+    if (userId.isNotEmpty) {
+      EntriesController.I.fetchEntries(userId);
+    }
   }
 
   @override
@@ -76,140 +65,159 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-        body: StaticData.entries.isEmpty
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+        body: EntriesController.I.entries.isEmpty
+            ? const EmptyEntriesWidget()
+            : const EntriesListWidget(),
+      ),
+    );
+  }
+}
+
+class EntriesListWidget extends StatelessWidget {
+  const EntriesListWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: EntriesController.I.entries.length,
+      itemBuilder: (context, index) {
+        if (index == EntriesController.I.entries.length) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: CustomCardWidget(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    JokeController.I.joke ?? ';((',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final Entry entry = EntriesController.I.entries[index];
+        return GestureDetector(
+          onTap: () {
+            GlobalRouter.I.router.push('/entry/${entry.entryId}');
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              color: ColorPalette.dark200,
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(color: ColorPalette.dark300),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (entry.imageUrls != null && entry.imageUrls!.isNotEmpty)
+                  Image.network(
+                    entry.imageUrls![0],
+                    width: MediaQuery.of(context).size.width,
+                    height: 170,
+                    fit: BoxFit.cover,
+                  )
+                else
+                  const SizedBox(
+                    height: 170,
+                    child: Center(child: Text("No Entries...")),
+                  ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'No entries found.',
+                        entry.title,
                         style: Theme.of(context)
                             .textTheme
-                            .titleSmall!
-                            .copyWith(fontWeight: FontWeight.normal),
+                            .bodyMedium!
+                            .copyWith(fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Go to the map screen to add an entry.',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(fontWeight: FontWeight.normal),
-                      ),
-                      SizedBox(height: 20),
-                      CustomButton(
-                          func: () {
-                            GlobalRouter.I.router.go(MapScreen.route);
-                          },
-                          text: "To Map Screen"),
-                      if (joke != null) SizedBox(height: 20),
-                      if (joke != null)
-                        CustomCardWidget(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                joke ?? ';((',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
+                      if (entry.subtitle != null)
+                        Text(
+                          entry.subtitle ?? "",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: ColorPalette.dark600),
                         ),
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "${entry.date} at ${entry.locationName}",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              )
-            : ListView.builder(
-                itemCount: StaticData.entries.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == StaticData.entries.length) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 20),
-                      child: CustomCardWidget(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              joke ?? ';((',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
 
-                  final Entry entry = StaticData.entries[index];
-                  return GestureDetector(
-                    onTap: () {
-                      GlobalRouter.I.router.push('/entry/${entry.entryId}');
-                    },
-                    child: Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                        color: ColorPalette.dark200,
-                        borderRadius: BorderRadius.circular(25),
-                        border: Border.all(color: ColorPalette.dark300),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (entry.imageUrls != null &&
-                              entry.imageUrls!.isNotEmpty)
-                            Image.network(
-                              entry.imageUrls![0],
-                              width: MediaQuery.of(context).size.width,
-                              height: 170,
-                              fit: BoxFit.cover,
-                            )
-                          else
-                            const SizedBox(
-                              height: 170,
-                              child: Center(child: Text("No Image...")),
-                            ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  entry.title,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  entry.subtitle ?? "",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(color: ColorPalette.dark600),
-                                ),
-                                const SizedBox(height: 20),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    "${entry.date} at ${entry.locationName}",
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+class EmptyEntriesWidget extends StatelessWidget {
+  const EmptyEntriesWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'No entries found.',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall!
+                  .copyWith(fontWeight: FontWeight.normal),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Go to the map screen to add an entry.',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(fontWeight: FontWeight.normal),
+            ),
+            const SizedBox(height: 20),
+            CustomButton(
+                func: () {
+                  GlobalRouter.I.router.go(MapScreen.route);
                 },
+                text: "To Map Screen"),
+            const SizedBox(height: 20),
+            if (JokeController.I.joke != null)
+              CustomCardWidget(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      JokeController.I.joke ?? ';((',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
               ),
+          ],
+        ),
       ),
     );
   }

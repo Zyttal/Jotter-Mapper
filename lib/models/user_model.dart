@@ -19,4 +19,6 @@ class UserModel {
         displayName: user.displayName ?? '',
         photoURL: user.photoURL ?? '');
   }
+
+  void updateUserPhotoUrl(String photoUrl) {}
 }

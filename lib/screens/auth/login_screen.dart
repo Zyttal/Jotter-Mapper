@@ -140,6 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: "Password",
                       icon: Icon(Icons.lock_outline_rounded),
                       controller: password,
+                      keyboardType: TextInputType.visiblePassword,
                       fn: passwordFn,
                       isPassword: true,
                       validator: MultiValidator([

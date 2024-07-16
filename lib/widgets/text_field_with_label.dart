@@ -4,6 +4,10 @@ import 'package:jotter_mapper/themes/custom_color_palette.dart';
 
 // ignore: must_be_immutable
 class TextFieldWithLabel extends StatefulWidget {
+  int? maxLines;
+
+  final TextInputType keyboardType;
+
   TextFieldWithLabel(
       {super.key,
       required this.label,
@@ -12,7 +16,9 @@ class TextFieldWithLabel extends StatefulWidget {
       this.isPassword = false,
       this.obfuscatefunc,
       required this.controller,
-      required this.fn});
+      required this.fn,
+      this.maxLines = 1,
+      this.keyboardType = TextInputType.text});
 
   final String label;
   final Widget icon;
@@ -42,8 +48,8 @@ class _TextFieldWithLabelState extends State<TextFieldWithLabel> {
         TextFormField(
           controller: widget.controller,
           keyboardAppearance: Brightness.dark,
-          keyboardType:
-              !widget.isPassword ? null : TextInputType.visiblePassword,
+          maxLines: widget.maxLines,
+          keyboardType: widget.keyboardType,
           obscureText: widget.isPassword && obfuscate,
           style: Theme.of(context).textTheme.bodyMedium,
           cursorColor: ColorPalette.primary100,

@@ -96,14 +96,20 @@ class GlobalRouter {
               name: EntryDetailsScreen.name,
               builder: (context, state) {
                 String? entryId = state.pathParameters['id'];
+
                 return EntryDetailsScreen(entryId: entryId);
               }),
           GoRoute(
               path: AddEntryScreen.route,
               name: AddEntryScreen.name,
               builder: (context, state) {
-                LatLng? location = state.extra as LatLng;
-                return AddEntryScreen(location: location);
+                final extra = state.extra as Map<String, dynamic>;
+                final LatLng location = extra['location'];
+                final String address = extra['address'];
+                return AddEntryScreen(
+                  location: location,
+                  address: address,
+                );
               }),
           ShellRoute(
             navigatorKey: _shellNavigatorKey,

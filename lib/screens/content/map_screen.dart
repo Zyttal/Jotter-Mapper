@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jotter_mapper/controllers/entries_controller.dart';
 import 'package:jotter_mapper/controllers/location_controller.dart';
 import 'package:jotter_mapper/static_data.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
@@ -50,7 +51,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void initializeMarkers() {
-    for (var entry in StaticData.entries) {
+    for (var entry in EntriesController.I.entries) {
       final marker = Marker(
         markerId: MarkerId(entry.entryId),
         position: entry.location,

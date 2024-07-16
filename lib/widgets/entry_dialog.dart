@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jotter_mapper/controllers/coords_details_controller.dart';
+import 'package:jotter_mapper/models/entries_model.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/content/add_entry_screen.dart';
-import 'package:jotter_mapper/static_data.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:jotter_mapper/widgets/custom_button.dart';
 
@@ -35,6 +35,22 @@ void addEntryDialog(BuildContext context, LatLng tappedLocation) {
           } else {
             final locationDetails = snapshot.data!;
             final address = locationDetails['address'] ?? {};
+            String fullAddress = '';
+            if (address['road'] != null) {
+              fullAddress += address['road'];
+            }
+            if (address['city'] != null) {
+              if (fullAddress.isNotEmpty) fullAddress += ', ';
+              fullAddress += address['city'];
+            }
+            if (address['state'] != null) {
+              if (fullAddress.isNotEmpty) fullAddress += ', ';
+              fullAddress += address['state'];
+            }
+            if (address['country'] != null) {
+              if (fullAddress.isNotEmpty) fullAddress += ', ';
+              fullAddress += address['country'];
+            }
 
             return AlertDialog(
               title: Row(
@@ -54,14 +70,19 @@ void addEntryDialog(BuildContext context, LatLng tappedLocation) {
                 ],
               ),
               content: Text(
-                'Address: ${address['road'] ?? ''}, ${address['city'] ?? ''}, ${address['state'] ?? ''}, ${address['country'] ?? ''}',
+                fullAddress,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               actions: [
                 CustomButton(
                   func: () {
+                    final extra = {
+                      'location': tappedLocation,
+                      'address': fullAddress
+                    };
+
                     GlobalRouter.I.router
-                        .push(AddEntryScreen.route, extra: tappedLocation);
+                        .push(AddEntryScreen.route, extra: extra);
                   },
                   text: "Add an Entry here",
                 ),
@@ -82,7 +103,7 @@ class CustomWaitingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Doing Something..."),
+      title: Center(child: Text("Doing Something...")),
       content: Container(
         height: 100,
         child: const SpinKitChasingDots(

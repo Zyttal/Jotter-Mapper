@@ -1,9 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jotter_mapper/controllers/entries_controller.dart';
+import 'package:jotter_mapper/routing/router.dart';
+import 'package:jotter_mapper/screens/content/home_screen.dart';
 import 'package:jotter_mapper/static_data.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:jotter_mapper/widgets/back_button.dart';
+import 'package:jotter_mapper/widgets/waiting_dialog.dart';
 
 class EntryDetailsScreen extends StatelessWidget {
   EntryDetailsScreen({super.key, this.entryId});
@@ -14,8 +19,8 @@ class EntryDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final entry =
-        StaticData.entries.firstWhere((entry) => entry.entryId == entryId);
+    final entry = EntriesController.I.entries
+        .firstWhere((entry) => entry.entryId == entryId);
 
     return Scaffold(
       appBar: AppBar(
@@ -69,32 +74,44 @@ class EntryDetailsScreen extends StatelessWidget {
                       entry.title,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: ColorPalette.dark300,
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Row(
-                        children: [
-                          const Icon(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              color: ColorPalette.dark300,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: const Icon(
                             Icons.edit_outlined,
                             color: ColorPalette.washedWhite,
                             size: 20,
                           ),
-                          const SizedBox(
-                            width: 10,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            await WaitingDialog.show(context,
+                                future:
+                                    EntriesController.I.deleteEntry(entryId!));
+                            GlobalRouter.I.router.go(HomeScreen.route);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: ColorPalette.dark300,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: const Icon(
+                              Icons.delete_outline_outlined,
+                              color: ColorPalette.washedWhite,
+                              size: 20,
+                            ),
                           ),
-                          Text(
-                            "Edit",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall!
-                                .copyWith(
-                                    fontWeight: FontWeight.bold, fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    )
+                        )
+                      ],
+                    ),
                   ],
                 ),
                 Text(

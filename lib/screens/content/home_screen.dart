@@ -3,9 +3,10 @@ import 'package:jotter_mapper/controllers/entries_controller.dart';
 import 'package:jotter_mapper/controllers/joke_controller.dart';
 import 'package:jotter_mapper/controllers/user_data_controller.dart';
 import 'package:jotter_mapper/custompainter_assets/header_painter.dart';
+import 'package:jotter_mapper/models/entries_model.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/content/map_screen.dart';
-import 'package:jotter_mapper/static_data.dart';
+
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:jotter_mapper/widgets/custom_button.dart';
 import 'package:jotter_mapper/widgets/custom_card_widget.dart';
@@ -22,15 +23,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = true;
+  late String userId;
 
   @override
   void initState() {
     super.initState();
-    final userId = UserDataController.I.currentUser?.uid ?? '';
-
-    if (userId.isNotEmpty) {
-      EntriesController.I.fetchEntries(userId);
-    }
+    userId = UserDataController.I.currentUser?.uid ?? '';
   }
 
   @override
@@ -65,9 +63,20 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-        body: EntriesController.I.entries.isEmpty
-            ? const EmptyEntriesWidget()
-            : const EntriesListWidget(),
+        body: FutureBuilder<void>(
+          future: EntriesController.I.fetchEntries(userId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error loading entries'));
+            } else {
+              return EntriesController.I.entries.isEmpty
+                  ? const EmptyEntriesWidget()
+                  : const EntriesListWidget();
+            }
+          },
+        ),
       ),
     );
   }
@@ -126,7 +135,7 @@ class EntriesListWidget extends StatelessWidget {
                 else
                   const SizedBox(
                     height: 170,
-                    child: Center(child: Text("No Entries...")),
+                    child: Center(child: Text("No Images...")),
                   ),
                 Padding(
                   padding:

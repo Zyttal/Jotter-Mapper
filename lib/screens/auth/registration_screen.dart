@@ -141,7 +141,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       controller: nickname,
                       fn: nicknameFn,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFieldWithLabel(
@@ -165,6 +165,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     TextFieldWithLabel(
                       label: "Password",
                       icon: Icon(Icons.lock_outline_rounded),
+                      keyboardType: TextInputType.visiblePassword,
                       controller: password,
                       fn: passwordFn,
                       isPassword: true,
@@ -182,7 +183,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                       ]).call,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFieldWithLabel(
@@ -190,6 +191,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         icon: Icon(Icons.lock_outline_rounded),
                         controller: confirmPassword,
                         fn: confirmPasswordFn,
+                        keyboardType: TextInputType.visiblePassword,
                         isPassword: true,
                         validator: (v) {
                           String? doesMatchPasswords =

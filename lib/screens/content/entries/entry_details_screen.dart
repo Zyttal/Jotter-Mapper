@@ -1,11 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:jotter_mapper/controllers/entries_controller.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/content/home_screen.dart';
-import 'package:jotter_mapper/static_data.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:jotter_mapper/widgets/general-widgets/back_button.dart';
 import 'package:jotter_mapper/widgets/general-widgets/waiting_dialog.dart';
@@ -13,7 +10,7 @@ import 'package:jotter_mapper/widgets/general-widgets/waiting_dialog.dart';
 class EntryDetailsScreen extends StatelessWidget {
   EntryDetailsScreen({super.key, this.entryId});
   static const String route = '/entry/:id';
-  static const String name = 'EntryDetails';
+  static const String name = 'Entry Details Screen';
 
   String? entryId;
 
@@ -25,7 +22,7 @@ class EntryDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          entry.title,
+          "Entry Details",
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         leadingWidth: 80,
@@ -77,15 +74,22 @@ class EntryDetailsScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: ColorPalette.dark300,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: const Icon(
-                            Icons.edit_outlined,
-                            color: ColorPalette.washedWhite,
-                            size: 20,
+                        GestureDetector(
+                          onTap: () {
+                            print(entry.entryId);
+                            GlobalRouter.I.router
+                                .push('/edit-entry/${entry.entryId}');
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: ColorPalette.dark300,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: const Icon(
+                              Icons.edit_outlined,
+                              color: ColorPalette.washedWhite,
+                              size: 20,
+                            ),
                           ),
                         ),
                         const SizedBox(

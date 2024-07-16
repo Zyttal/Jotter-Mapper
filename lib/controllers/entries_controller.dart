@@ -77,7 +77,7 @@ class EntriesController with ChangeNotifier {
       print(imageUrls);
 
       final newEntry = Entry(
-          entryId: '',
+          entryId: entries.length.toString(),
           userId: userId,
           title: title,
           date: Entry.formatDate(DateTime.now()),
@@ -88,6 +88,109 @@ class EntriesController with ChangeNotifier {
           locationName: locationName);
 
       await addEntry(newEntry);
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> updateEntry({
+    required String entryId,
+    required String title,
+    String? subtitle,
+    required String content,
+    required LatLng location,
+    required String locationName,
+    List<XFile>? images,
+  }) async {
+    try {
+      final userId = UserDataController.I.currentUser!.uid;
+      List<String>? imageUrls = [];
+
+      if (images != null && images.isNotEmpty) {
+        for (var image in images) {
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('user_photos/entries/$userId/${image.name}');
+          await ref.putFile(File(image.path));
+          final imageUrl = await ref.getDownloadURL();
+          imageUrls.add(imageUrl);
+        }
+      }
+
+      final updatedEntry = Entry(
+        entryId: entryId,
+        userId: userId,
+        title: title,
+        date: Entry.formatDate(DateTime.now()),
+        imageUrls: imageUrls,
+        location: location,
+        subtitle: subtitle,
+        content: content,
+        locationName: locationName,
+      );
+
+      await FirebaseFirestore.instance
+          .collection('entries')
+          .doc(entryId)
+          .update(updatedEntry.toMap());
+
+      final index = entries.indexWhere((entry) => entry.entryId == entryId);
+      if (index != -1) {
+        entries[index] = updatedEntry;
+      }
+
+      notifyListeners();
+    } catch (e) {
+      print("Error editing entry: $e");
+    }
+  }
+
+  Future<void> editEntry({
+    required String entryId,
+    required String title,
+    String? subtitle,
+    required String content,
+    required LatLng location,
+    required String locationName,
+    List<XFile>? images,
+  }) async {
+    try {
+      final userId = UserDataController.I.currentUser!.uid;
+      List<String>? imageUrls;
+
+      if (images != null && images.isNotEmpty) {
+        imageUrls = [];
+        for (var image in images) {
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('user_photos/entries/${image.name}');
+          await ref.putFile(File(image.path));
+          final imageUrl = await ref.getDownloadURL();
+          imageUrls.add(imageUrl);
+        }
+      }
+
+      final updatedEntry = Entry(
+        entryId: entryId,
+        userId: userId,
+        title: title,
+        date: Entry.formatDate(DateTime.now()),
+        imageUrls: imageUrls,
+        location: location,
+        subtitle: subtitle,
+        content: content,
+        locationName: locationName,
+      );
+
+      await FirebaseFirestore.instance
+          .collection('entries')
+          .doc(entryId)
+          .update(updatedEntry.toMap());
+
+      final index = entries.indexWhere((entry) => entry.entryId == entryId);
+      entries[index] = updatedEntry;
+
+      notifyListeners();
     } catch (e) {
       print("Error: $e");
     }

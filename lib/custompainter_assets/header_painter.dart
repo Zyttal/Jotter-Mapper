@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class HeaderPainter extends CustomPainter {
@@ -8,7 +6,7 @@ class HeaderPainter extends CustomPainter {
     Paint paint = Paint();
     Path path = Path();
 
-    paint.color = Color(0xff282828);
+    paint.color = const Color(0xff282828);
     path = Path();
     path.lineTo(size.width, size.height * 0.72);
     path.cubicTo(size.width, size.height * 0.72, size.width * 0.98,

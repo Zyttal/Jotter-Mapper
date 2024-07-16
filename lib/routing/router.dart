@@ -8,10 +8,11 @@ import 'package:jotter_mapper/controllers/auth_controller.dart';
 import 'package:jotter_mapper/enum/auth_enum.dart';
 import 'package:jotter_mapper/screens/auth/login_screen.dart';
 import 'package:jotter_mapper/screens/auth/registration_screen.dart';
-import 'package:jotter_mapper/screens/content/add_entry_screen.dart';
+import 'package:jotter_mapper/screens/content/entries/add_entry_screen.dart';
+import 'package:jotter_mapper/screens/content/entries/edit_entry_screen.dart';
 import 'package:jotter_mapper/screens/content/home_screen.dart';
 import 'package:jotter_mapper/screens/content/map_screen.dart';
-import 'package:jotter_mapper/screens/content/entry_details_screen.dart';
+import 'package:jotter_mapper/screens/content/entries/entry_details_screen.dart';
 import 'package:jotter_mapper/screens/content/profile_screen.dart';
 import 'package:jotter_mapper/screens/content/wrapper.dart';
 import 'package:jotter_mapper/screens/landing_screen.dart';
@@ -85,7 +86,7 @@ class GlobalRouter {
               path: LoginScreen.route,
               name: LoginScreen.name,
               builder: (context, _) {
-                return LoginScreen();
+                return const LoginScreen();
               }),
           GoRoute(
               parentNavigatorKey: _rootNavigatorKey,
@@ -113,6 +114,14 @@ class GlobalRouter {
                   location: location,
                   address: address,
                 );
+              }),
+          GoRoute(
+              path: EditEntryScreen.route,
+              name: EditEntryScreen.name,
+              builder: (context, state) {
+                String? entryId = state.pathParameters['id'];
+
+                return EditEntryScreen(entryId: entryId);
               }),
           ShellRoute(
             navigatorKey: _shellNavigatorKey,

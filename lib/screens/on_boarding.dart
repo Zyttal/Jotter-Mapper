@@ -4,7 +4,7 @@ import 'package:jotter_mapper/controllers/shared_preferences.dart';
 import 'package:jotter_mapper/enum/first_instance_enum.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/auth/login_screen.dart';
-import 'package:jotter_mapper/widgets/custom_button.dart';
+import 'package:jotter_mapper/widgets/general-widgets/custom_button.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

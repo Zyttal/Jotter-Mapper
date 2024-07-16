@@ -40,10 +40,10 @@ class AccountInformation extends StatelessWidget {
                                   controller: name,
                                   fn: namefn,
                                   label: "Display Name",
-                                  icon: Icon(Icons.person_2_outlined),
+                                  icon: const Icon(Icons.person_2_outlined),
                                   validator: null,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 CustomButton(

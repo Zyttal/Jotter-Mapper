@@ -18,7 +18,8 @@ class AddEntryScreen extends StatefulWidget {
   static const String name = "Add Entry Screen";
   static const String route = "/add-entry";
 
-  AddEntryScreen({super.key, required this.location, required this.address});
+  const AddEntryScreen(
+      {super.key, required this.location, required this.address});
   final LatLng location;
   final String address;
 
@@ -58,8 +59,6 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
           locationName: widget.address);
 
       GlobalRouter.I.router.go(HomeScreen.route);
-    } else {
-      print("Form is not validated...");
     }
   }
 
@@ -91,7 +90,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                     children: [
                       TextFieldWithLabel(
                           label: "Title",
-                          icon: Icon(Icons.abc),
+                          icon: const Icon(Icons.abc),
                           validator: MultiValidator([
                             RequiredValidator(errorText: "Title is required")
                           ]).call,
@@ -102,7 +101,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                       ),
                       TextFieldWithLabel(
                           label: "Subtitle",
-                          icon: Icon(Icons.abc),
+                          icon: const Icon(Icons.abc),
                           validator: null,
                           controller: subtitle,
                           fn: subtitlefn),
@@ -111,7 +110,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                       ),
                       TextFieldWithLabel(
                         label: "Content",
-                        icon: Icon(Icons.text_fields),
+                        icon: const Icon(Icons.text_fields),
                         controller: content,
                         fn: contentfn,
                         validator: MultiValidator([
@@ -142,7 +141,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                   items: _selectedImages!.map((image) {
                                     return Builder(
                                         builder: (BuildContext context) {
-                                      return Container(
+                                      return SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width,
                                         child: Image.file(
@@ -169,11 +168,11 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                     borderRadius: BorderRadius.circular(25),
                                     border: Border.all(
                                         color: ColorPalette.dark300)),
-                                padding: EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(20),
                                 child: const Column(
                                   children: [
                                     Icon(Icons.camera_alt_outlined),
-                                    const SizedBox(
+                                    SizedBox(
                                       height: 20,
                                     ),
                                     Text("Add Pictures?")

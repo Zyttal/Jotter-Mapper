@@ -58,7 +58,7 @@ class LoadingWidget extends StatelessWidget {
       elevation: 0,
       backgroundColor: ColorPalette.dark200,
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 100),
+        constraints: const BoxConstraints(maxWidth: 100),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

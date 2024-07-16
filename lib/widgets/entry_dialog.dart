@@ -4,7 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jotter_mapper/controllers/coords_details_controller.dart';
 import 'package:jotter_mapper/models/entries_model.dart';
 import 'package:jotter_mapper/routing/router.dart';
-import 'package:jotter_mapper/screens/content/add_entry_screen.dart';
+import 'package:jotter_mapper/screens/content/entries/add_entry_screen.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:jotter_mapper/widgets/general-widgets/custom_button.dart';
 
@@ -21,8 +21,8 @@ void addEntryDialog(BuildContext context, LatLng tappedLocation) {
             return const CustomWaitingDialog();
           } else if (snapshot.hasError) {
             return AlertDialog(
-              title: Text("Error"),
-              content: Text("Failed to fetch location details"),
+              title: const Text("Error"),
+              content: const Text("Failed to fetch location details"),
               actions: [
                 CustomButton(
                   func: () {
@@ -104,7 +104,7 @@ class CustomWaitingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Center(child: Text("Doing Something...")),
+      title: const Center(child: Text("Doing Something...")),
       content: Container(
         height: 100,
         child: const SpinKitChasingDots(
@@ -141,7 +141,7 @@ void showEntryDialog(BuildContext context, Entry entry) {
           children: [
             if (entry.imageUrls != null && entry.imageUrls!.isNotEmpty)
               Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 height: 300,
                 width: 300,
                 child: Image.network(

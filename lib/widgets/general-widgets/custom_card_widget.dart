@@ -11,7 +11,7 @@ class CustomCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
             color: ColorPalette.dark200,
             border: Border.all(color: ColorPalette.dark300),

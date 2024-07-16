@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:jotter_mapper/controllers/entries_controller.dart';
-import 'package:jotter_mapper/controllers/joke_controller.dart';
 import 'package:jotter_mapper/controllers/user_data_controller.dart';
 import 'package:jotter_mapper/custompainter_assets/header_painter.dart';
-import 'package:jotter_mapper/models/entries_model.dart';
-import 'package:jotter_mapper/routing/router.dart';
-import 'package:jotter_mapper/screens/content/map_screen.dart';
-
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
-import 'package:jotter_mapper/widgets/general-widgets/custom_button.dart';
-import 'package:jotter_mapper/widgets/general-widgets/custom_card_widget.dart';
 import 'package:jotter_mapper/widgets/home-widgets/empty_entries_widget.dart';
 import 'package:jotter_mapper/widgets/home-widgets/entries_list_widget.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   static const String name = "Home Screen";
-  static const String route = "/home";
+  static const String route = "/";
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -79,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         top: 20,
                         right: 20,
                         child: IconButton(
-                          icon: Icon(Icons.refresh_outlined),
+                          icon: const Icon(Icons.refresh_outlined),
                           onPressed: _refreshEntries,
                         ))
                   ],

@@ -48,10 +48,7 @@ class LocationController with ChangeNotifier {
       _currentPosition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
 
-      print("Current Location: ${_currentPosition}");
       notifyListeners();
-    } catch (e) {
-      print("Error getting current Location: $e");
-    }
+    } catch (e) {}
   }
 }

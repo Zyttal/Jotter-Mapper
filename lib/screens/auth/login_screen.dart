@@ -4,14 +4,16 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:jotter_mapper/controllers/auth_controller.dart';
 import 'package:jotter_mapper/routing/router.dart';
 import 'package:jotter_mapper/screens/auth/registration_screen.dart';
-import 'package:jotter_mapper/widgets/custom_button.dart';
-import 'package:jotter_mapper/widgets/text_field_with_label.dart';
+import 'package:jotter_mapper/widgets/general-widgets/custom_button.dart';
+import 'package:jotter_mapper/widgets/general-widgets/text_field_with_label.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
-import 'package:jotter_mapper/widgets/waiting_dialog.dart';
+import 'package:jotter_mapper/widgets/general-widgets/waiting_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String name = "Login Screen";
   static const String route = "/login";
+
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -138,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextFieldWithLabel(
                       label: "Password",
-                      icon: Icon(Icons.lock_outline_rounded),
+                      icon: const Icon(Icons.lock_outline_rounded),
                       controller: password,
                       keyboardType: TextInputType.visiblePassword,
                       fn: passwordFn,

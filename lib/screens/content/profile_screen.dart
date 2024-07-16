@@ -6,10 +6,8 @@ import 'package:jotter_mapper/controllers/user_data_controller.dart';
 import 'package:jotter_mapper/custompainter_assets/header_painter.dart';
 import 'package:jotter_mapper/themes/custom_color_palette.dart';
 import 'package:jotter_mapper/widgets/general-widgets/custom_button.dart';
-import 'package:jotter_mapper/widgets/general-widgets/custom_card_widget.dart';
 import 'package:jotter_mapper/widgets/profile-widgets/account_information.dart';
 import 'package:jotter_mapper/widgets/profile-widgets/app_information_widget.dart';
-import 'package:jotter_mapper/widgets/general-widgets/text_field_with_label.dart';
 import 'package:jotter_mapper/widgets/general-widgets/waiting_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {

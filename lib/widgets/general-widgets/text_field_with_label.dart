@@ -76,19 +76,19 @@ class _TextFieldWithLabelState extends State<TextFieldWithLabel> {
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide:
-                      BorderSide(color: ColorPalette.dark300, width: 2)),
+                      const BorderSide(color: ColorPalette.dark300, width: 2)),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide:
-                    BorderSide(color: ColorPalette.primary100, width: 2),
+                    const BorderSide(color: ColorPalette.primary100, width: 2),
               ),
               errorBorder: InputBorder.none,
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide:
-                    BorderSide(color: ColorPalette.primary100, width: 2),
+                    const BorderSide(color: ColorPalette.primary100, width: 2),
               ),
-              contentPadding: EdgeInsets.all(20),
+              contentPadding: const EdgeInsets.all(20),
               hoverColor: ColorPalette.primary100,
               focusColor: ColorPalette.primary100),
           validator: widget.validator,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:jotter_mapper/controllers/user_data_controller.dart';
 import 'package:jotter_mapper/enum/auth_enum.dart';
 import 'package:jotter_mapper/services/firebase_services.dart';
 
@@ -25,6 +26,8 @@ class AuthController with ChangeNotifier {
   login(String email, String password) async {
     UserCredential userCredential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
+
+    UserDataController.instance.loadCurrentUser();
   }
 
   logout() {

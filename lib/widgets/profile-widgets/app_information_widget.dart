@@ -44,7 +44,7 @@ class AppInformationWidget extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    "About Us",
+                    "Info",
                     style: Theme.of(context).textTheme.bodyMedium,
                   )
                 ],

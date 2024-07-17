@@ -35,6 +35,9 @@ class GlobalRouter {
     if (state.matchedLocation == LandingScreen.route) {
       return null;
     }
+    if (state.matchedLocation == OnBoarding.route) {
+      return null;
+    }
     if (AuthController.I.state == AuthState.authenticated) {
       if (state.matchedLocation == LoginScreen.route) {
         return HomeScreen.route;
